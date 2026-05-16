@@ -15,7 +15,7 @@ public class SettingsDialog extends JDialog {
     public SettingsDialog(Frame parent, String adminUsername) {
         super(parent, "System Settings", true);
         this.adminUsername = adminUsername;
-        setSize(550, 520);
+        setSize(550, 580);
         setLocationRelativeTo(parent);
         setResizable(false);
         UIUtils.registerEscClose(this);

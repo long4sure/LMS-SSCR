@@ -12,7 +12,7 @@ public class SetupWizard extends JDialog {
 
     public SetupWizard(Frame parent) {
         super(parent, "First-Time Setup", true);
-        setSize(500, 480);
+        setSize(500, 550); // Increased height to prevent clipping
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE); // Must complete
         setResizable(false);
@@ -95,11 +95,11 @@ public class SetupWizard extends JDialog {
     private void stylePass(JPasswordField p) {
         p.setFont(UIUtils.FONT_REGULAR);
         p.setForeground(UIUtils.TEXT_PRIMARY);
-        p.setCaretColor(Color.WHITE);
-        p.setBackground(UIUtils.SIDEBAR_BG);
+        p.setCaretColor(UIUtils.TEXT_PRIMARY);
+        p.setBackground(Color.WHITE);
         p.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UIUtils.BORDER_COLOR, 1),
-                new EmptyBorder(5, 8, 5, 8))); // Compact
+                new EmptyBorder(8, 12, 8, 12))); // Match text field padding
     }
 
     private JLabel lbl(String text) {

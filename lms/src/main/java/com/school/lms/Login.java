@@ -151,7 +151,7 @@ public class Login extends JPanel {
         userGuideLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         userGuideLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                javax.swing.JOptionPane.showMessageDialog(Login.this, "Welcome to the Library Management System!\n\n1. Use 'admin' (password: admin123) to log in for full administrative access.\n2. Use 'staff' (password: staff123) to log in for daily operations.\n3. Guest Search allows anyone to browse the catalog.\n4. Manage Books: Add, edit, or delete books.\n5. Issue/Return: Track borrowing and returns.\n6. Reports: View transactions and overdue books.\n\nEnjoy the system!", "User Guide", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                javax.swing.JOptionPane.showMessageDialog(Login.this, "Welcome to the Library Management System!\n\n1. Use 'admin' to log in (password: the password you created during the first-time setup).\n2. Use 'staff' (password: staff123) to log in for daily operations.\n3. Guest Search allows anyone to browse the catalog.\n4. Manage Books: Add, edit, or delete books.\n5. Issue/Return: Track borrowing and returns.\n6. Reports: View transactions and overdue books.\n\nEnjoy the system!", "User Guide", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
         });
         card.add(userGuideLabel, gbc);
