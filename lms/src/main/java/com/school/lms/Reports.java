@@ -40,6 +40,8 @@ public class Reports extends JPanel {
         JButton exportHistoryCsv = UIUtils.createButton("Export CSV");
         refreshHistory.setBackground(new Color(71, 85, 105)); // Slate
         exportHistoryCsv.setBackground(new Color(71, 85, 105));
+        refreshHistory.setForeground(Color.WHITE);
+        exportHistoryCsv.setForeground(Color.WHITE);
         refreshHistory.addActionListener(e   -> { loadHistory(); loadStats(); });
         exportHistoryCsv.addActionListener(e -> exportCsv(historyTable, "transactions_export.csv"));
         tabs.addTab("All Transactions", buildTabPanel(historyTable, refreshHistory, exportHistoryCsv));
@@ -68,6 +70,8 @@ public class Reports extends JPanel {
         JButton exportOverdueCsv = UIUtils.createButton("Export CSV");
         refreshOverdue.setBackground(new Color(220, 38, 38)); // Red
         exportOverdueCsv.setBackground(new Color(220, 38, 38));
+        refreshOverdue.setForeground(Color.WHITE);
+        exportOverdueCsv.setForeground(Color.WHITE);
         refreshOverdue.addActionListener(e   -> { loadOverdue(); loadStats(); });
         exportOverdueCsv.addActionListener(e -> exportCsv(overdueTable, "overdue_export.csv"));
         tabs.addTab("Overdue Books", buildTabPanel(overdueTable, refreshOverdue, exportOverdueCsv));
