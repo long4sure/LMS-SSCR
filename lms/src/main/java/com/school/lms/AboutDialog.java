@@ -5,13 +5,13 @@ import javax.swing.border.*;
 import java.awt.*;
 
 /**
- * About dialog - Minimalistic tech stack and credits.
+ * About dialog - Minimalistic tech stack and credits with scroll support.
  */
 public class AboutDialog extends JDialog {
 
     public AboutDialog(Frame parent) {
         super(parent, "About - " + AppConfig.getLibraryName(), true);
-        setSize(550, 420); 
+        setSize(550, 500); // Increased height to ensure nothing is cut off
         setLocationRelativeTo(parent);
         setResizable(false);
         UIUtils.registerEscClose(this);
@@ -36,25 +36,31 @@ public class AboutDialog extends JDialog {
         JPanel info = new JPanel();
         info.setBackground(UIUtils.CARD_BG);
         info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
-        info.setBorder(new EmptyBorder(25, 30, 20, 30));
+        info.setBorder(new EmptyBorder(25, 30, 25, 30));
 
         info.add(centeredLabel(AppConfig.getLibraryName(), Font.BOLD, 18, UIUtils.TEXT_PRIMARY));
         info.add(Box.createVerticalStrut(4));
         info.add(centeredLabel("Library Management System  v" + AppConfig.getVersion(), Font.PLAIN, 13, UIUtils.TEXT_MUTED));
-        info.add(Box.createVerticalStrut(15));
+        info.add(Box.createVerticalStrut(20));
         
         info.add(centeredLabel("Developed as a Capstone Project by Jerome Misa", Font.BOLD, 14, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("San Sebastian College Recoletos - Canlubang", Font.ITALIC, 13, UIUtils.TEXT_MUTED));
         
-        info.add(Box.createVerticalStrut(25));
+        info.add(Box.createVerticalStrut(30));
         info.add(centeredLabel("Technology Stack:", Font.BOLD, 14, UIUtils.TEXT_PRIMARY));
-        info.add(Box.createVerticalStrut(8));
+        info.add(Box.createVerticalStrut(10));
         info.add(centeredLabel("• Language: Java 25 (OpenJDK/Adoptium)", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("• Framework: Java Swing (Desktop GUI)", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("• Database: H2 Embedded Engine (SQL)", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("• Build Tool: Apache Maven", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("• Packaging: jpackage tool", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("• UI Theme: Custom 'Professional Light' Theme", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+
+        // Wrap in ScrollPane just in case
+        JScrollPane scroll = new JScrollPane(info);
+        scroll.setBorder(null);
+        scroll.setBackground(UIUtils.CARD_BG);
+        scroll.getViewport().setBackground(UIUtils.CARD_BG);
 
         // Close button
         JButton closeBtn = UIUtils.createButton("Close");
@@ -66,7 +72,7 @@ public class AboutDialog extends JDialog {
         btnPanel.add(closeBtn);
 
         root.add(header, BorderLayout.NORTH);
-        root.add(info, BorderLayout.CENTER);
+        root.add(scroll, BorderLayout.CENTER);
         root.add(btnPanel, BorderLayout.SOUTH);
         add(root);
     }
