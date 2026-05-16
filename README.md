@@ -85,6 +85,28 @@ Your folder/
 
 ---
 
+## 🛠️ Technology Stack & Credits
+
+### Core Technologies
+- **Language:** Java 25 (OpenJDK / Adoptium)
+- **GUI Framework:** Java Swing
+- **Database:** H2 Embedded Database Engine (SQL)
+- **Build System:** Apache Maven
+- **Distribution Tool:** jpackage
+
+### Frameworks & Tools
+- **UI Theme:** Custom "Professional Light" Theme (Vanilla CSS/Swing Graphics)
+- **Version Control:** Git & GitHub
+- **IDE Support:** JetBrains PyCharm with Java Environment
+- **Packaging:** Native Windows App Bundling (App Image)
+
+### References & Documentation
+- **Oracle Java SE Documentation** (Language specifications)
+- **H2 Database Engine User Manual** (SQL Syntax and Embedded Logic)
+- **FlatLaf Inspiration** (For clean typography and UI layout best practices)
+
+---
+
 ## 👨‍💻 Credits
 
 Developed as a Capstone Project by **Jerome Misa**  

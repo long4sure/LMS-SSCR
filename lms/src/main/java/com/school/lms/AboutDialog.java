@@ -5,13 +5,13 @@ import javax.swing.border.*;
 import java.awt.*;
 
 /**
- * About dialog - Clean typography and layout without broken images.
+ * About dialog - Comprehensive credits and technology stack.
  */
 public class AboutDialog extends JDialog {
 
     public AboutDialog(Frame parent) {
         super(parent, "About - " + AppConfig.getLibraryName(), true);
-        setSize(550, 400); // Increased size slightly to fit the new features text
+        setSize(550, 520); // Increased height for comprehensive credits
         setLocationRelativeTo(parent);
         setResizable(false);
         UIUtils.registerEscClose(this);
@@ -27,40 +27,53 @@ public class AboutDialog extends JDialog {
         header.setBackground(UIUtils.SIDEBAR_BG);
         header.setBorder(new EmptyBorder(15, 20, 15, 20));
 
-        JLabel title = new JLabel("About");
+        JLabel title = new JLabel("About System");
         title.setFont(UIUtils.FONT_TITLE);
         title.setForeground(Color.WHITE);
         header.add(title, BorderLayout.WEST);
 
-        // Info content
+        // Info content Scrollable
         JPanel info = new JPanel();
         info.setBackground(UIUtils.CARD_BG);
         info.setLayout(new BoxLayout(info, BoxLayout.Y_AXIS));
-        info.setBorder(new EmptyBorder(25, 30, 20, 30));
+        info.setBorder(new EmptyBorder(20, 30, 20, 30));
 
         info.add(centeredLabel(AppConfig.getLibraryName(), Font.BOLD, 18, UIUtils.TEXT_PRIMARY));
-        info.add(Box.createVerticalStrut(8));
-        info.add(centeredLabel("Library Management System  v" + AppConfig.getVersion(), Font.PLAIN, 14, UIUtils.TEXT_MUTED));
-        info.add(Box.createVerticalStrut(25));
-        info.add(centeredLabel("Developed as a Capstone Project by Jerome Misa", Font.PLAIN, 14, UIUtils.TEXT_PRIMARY));
+        info.add(Box.createVerticalStrut(4));
+        info.add(centeredLabel("Library Management System  v" + AppConfig.getVersion(), Font.PLAIN, 13, UIUtils.TEXT_MUTED));
+        info.add(Box.createVerticalStrut(15));
+        
+        info.add(centeredLabel("Developed as a Capstone Project by Jerome Misa", Font.BOLD, 14, UIUtils.TEXT_PRIMARY));
         info.add(centeredLabel("San Sebastian College Recoletos - Canlubang", Font.ITALIC, 13, UIUtils.TEXT_MUTED));
         
-        info.add(Box.createVerticalStrut(25));
-        info.add(centeredLabel("Key Features:", Font.BOLD, 13, UIUtils.TEXT_PRIMARY));
-        info.add(centeredLabel("• Book Management & Circulation", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
-        info.add(centeredLabel("• Real-time Dashboard Analytics", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
-        info.add(centeredLabel("• Overdue Fine Tracking & Reporting", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
-        info.add(Box.createVerticalStrut(25));
+        info.add(Box.createVerticalStrut(20));
+        info.add(centeredLabel("Technology Stack:", Font.BOLD, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Language: Java 25 (OpenJDK/Adoptium)", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Framework: Java Swing (Desktop GUI)", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Database: H2 Embedded Engine (SQL)", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Build Tool: Apache Maven", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Packaging: jpackage tool", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        
+        info.add(Box.createVerticalStrut(15));
+        info.add(centeredLabel("Tools & Frameworks:", Font.BOLD, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• UI Theme: Custom 'Professional Light' Theme", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Version Control: Git & GitHub", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• IDE: JetBrains PyCharm with Java Support", Font.PLAIN, 13, UIUtils.TEXT_PRIMARY));
 
+        info.add(Box.createVerticalStrut(15));
+        info.add(centeredLabel("References:", Font.BOLD, 13, UIUtils.TEXT_PRIMARY));
+        info.add(centeredLabel("• Oracle Java Documentation", Font.PLAIN, 12, UIUtils.TEXT_MUTED));
+        info.add(centeredLabel("• H2 Database Engine Documentation", Font.PLAIN, 12, UIUtils.TEXT_MUTED));
+
+        info.add(Box.createVerticalStrut(20));
         JSeparator sep = new JSeparator();
         sep.setAlignmentX(Component.CENTER_ALIGNMENT);
         sep.setMaximumSize(new Dimension(340, 1));
         sep.setForeground(UIUtils.BORDER_COLOR);
         info.add(sep);
 
-        info.add(Box.createVerticalStrut(15));
-        info.add(centeredLabel("Built with Java 25 | H2 Database | Swing", Font.PLAIN, 13, UIUtils.TEXT_MUTED));
-        info.add(centeredLabel("Fully offline - no server or internet required.", Font.ITALIC, 12, new Color(40, 167, 69))); // Success green
+        info.add(Box.createVerticalStrut(10));
+        info.add(centeredLabel("Fully offline - no server or internet required.", Font.ITALIC, 12, new Color(40, 167, 69)));
 
         // Close button
         JButton closeBtn = UIUtils.createButton("Close");

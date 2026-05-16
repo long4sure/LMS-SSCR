@@ -18,7 +18,7 @@ public class SettingsDialog extends JDialog {
     public SettingsDialog(Frame parent, String adminUsername) {
         super(parent, "System Settings", true);
         this.adminUsername = adminUsername;
-        setSize(550, 720);
+        setSize(550, 600); // Reduced height to fit on smaller screens
         setLocationRelativeTo(parent);
         setResizable(false);
         UIUtils.registerEscClose(this);
@@ -51,14 +51,14 @@ public class SettingsDialog extends JDialog {
         title.setForeground(Color.WHITE);
         header.add(title, BorderLayout.WEST);
 
-        // Content
+        // Content Scrollable
         JPanel form = new JPanel(new GridBagLayout());
         form.setBackground(UIUtils.CARD_BG);
-        form.setBorder(new EmptyBorder(20, 25, 20, 25)); // Compact
+        form.setBorder(new EmptyBorder(15, 25, 15, 25)); // More compact padding
 
         GridBagConstraints g = new GridBagConstraints();
         g.fill = GridBagConstraints.HORIZONTAL;
-        g.insets = new Insets(6, 0, 6, 0); // Compact
+        g.insets = new Insets(4, 0, 4, 0); // More compact insets
         g.weightx = 1.0;
         g.gridx = 0; g.gridy = 0;
 
@@ -76,9 +76,9 @@ public class SettingsDialog extends JDialog {
 
         // Admin Security
         g.gridy++;
-        g.insets = new Insets(15, 0, 6, 0); // extra top margin
+        g.insets = new Insets(12, 0, 4, 0); // extra top margin
         form.add(UIUtils.createHeader("Admin Security"), g);
-        g.insets = new Insets(6, 0, 6, 0);
+        g.insets = new Insets(4, 0, 4, 0);
 
         passField = new JPasswordField();
         stylePass(passField);
@@ -92,9 +92,9 @@ public class SettingsDialog extends JDialog {
 
         // Staff Security
         g.gridy++;
-        g.insets = new Insets(15, 0, 6, 0);
+        g.insets = new Insets(12, 0, 4, 0);
         form.add(UIUtils.createHeader("Staff Account"), g);
-        g.insets = new Insets(6, 0, 6, 0);
+        g.insets = new Insets(4, 0, 4, 0);
 
         staffUserField = UIUtils.createField(true);
         staffUserField.setText(currentStaffUsername);
@@ -110,6 +110,11 @@ public class SettingsDialog extends JDialog {
         stylePass(staffPassConfirmField);
         g.gridy++; form.add(lbl("Confirm New Staff Password:"), g);
         g.gridy++; form.add(staffPassConfirmField, g);
+
+        // Wrap in ScrollPane
+        JScrollPane scroll = new JScrollPane(form);
+        scroll.setBorder(null);
+        scroll.getVerticalScrollBar().setUnitIncrement(12);
 
         // Buttons
         JButton saveBtn = UIUtils.createButton("Save Changes");
@@ -127,7 +132,7 @@ public class SettingsDialog extends JDialog {
         btnPanel.add(saveBtn);
 
         root.add(header, BorderLayout.NORTH);
-        root.add(form, BorderLayout.CENTER);
+        root.add(scroll, BorderLayout.CENTER);
         root.add(btnPanel, BorderLayout.SOUTH);
         add(root);
     }
