@@ -5,21 +5,37 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class SettingsDialog extends JDialog {
 
-    private JTextField libNameField, fineRateField;
+    private JTextField libNameField, fineRateField, staffUserField;
     private JPasswordField passField, passConfirmField;
+    private JPasswordField staffPassField, staffPassConfirmField;
     private String adminUsername;
+    private String currentStaffUsername = "staff";
 
     public SettingsDialog(Frame parent, String adminUsername) {
         super(parent, "System Settings", true);
         this.adminUsername = adminUsername;
-        setSize(550, 580);
+        setSize(550, 720);
         setLocationRelativeTo(parent);
         setResizable(false);
         UIUtils.registerEscClose(this);
+        fetchStaffUsername();
         buildUI();
+    }
+
+    private void fetchStaffUsername() {
+        try (Connection c = DatabaseConnection.getConnection();
+             PreparedStatement ps = c.prepareStatement("SELECT username FROM users WHERE role='staff' LIMIT 1");
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                currentStaffUsername = rs.getString("username");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void buildUI() {
@@ -58,10 +74,10 @@ public class SettingsDialog extends JDialog {
         g.gridy++; form.add(lbl("Overdue Fine Rate (₱ per day):"), g);
         g.gridy++; form.add(fineRateField, g);
 
-        // Security
+        // Admin Security
         g.gridy++;
-        g.insets = new Insets(20, 0, 6, 0); // extra top margin
-        form.add(UIUtils.createHeader("Security"), g);
+        g.insets = new Insets(15, 0, 6, 0); // extra top margin
+        form.add(UIUtils.createHeader("Admin Security"), g);
         g.insets = new Insets(6, 0, 6, 0);
 
         passField = new JPasswordField();
@@ -73,6 +89,27 @@ public class SettingsDialog extends JDialog {
         stylePass(passConfirmField);
         g.gridy++; form.add(lbl("Confirm New Password:"), g);
         g.gridy++; form.add(passConfirmField, g);
+
+        // Staff Security
+        g.gridy++;
+        g.insets = new Insets(15, 0, 6, 0);
+        form.add(UIUtils.createHeader("Staff Account"), g);
+        g.insets = new Insets(6, 0, 6, 0);
+
+        staffUserField = UIUtils.createField(true);
+        staffUserField.setText(currentStaffUsername);
+        g.gridy++; form.add(lbl("Staff Username:"), g);
+        g.gridy++; form.add(staffUserField, g);
+
+        staffPassField = new JPasswordField();
+        stylePass(staffPassField);
+        g.gridy++; form.add(lbl("Change Staff Password (leave blank to keep current):"), g);
+        g.gridy++; form.add(staffPassField, g);
+
+        staffPassConfirmField = new JPasswordField();
+        stylePass(staffPassConfirmField);
+        g.gridy++; form.add(lbl("Confirm New Staff Password:"), g);
+        g.gridy++; form.add(staffPassConfirmField, g);
 
         // Buttons
         JButton saveBtn = UIUtils.createButton("Save Changes");
@@ -117,9 +154,16 @@ public class SettingsDialog extends JDialog {
         String fineStr = fineRateField.getText().trim();
         String pass = new String(passField.getPassword());
         String conf = new String(passConfirmField.getPassword());
+        
+        String sUser = staffUserField.getText().trim();
+        String sPass = new String(staffPassField.getPassword());
+        String sConf = new String(staffPassConfirmField.getPassword());
 
         if (libName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Library name cannot be empty."); return;
+        }
+        if (sUser.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Staff username cannot be empty."); return;
         }
 
         double fine;
@@ -130,15 +174,14 @@ public class SettingsDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Invalid fine rate."); return;
         }
 
-        // Validate password if changing
+        // Validate Admin Password
         if (!pass.isEmpty()) {
             if (pass.length() < 6) {
-                JOptionPane.showMessageDialog(this, "Password must be at least 6 characters."); return;
+                JOptionPane.showMessageDialog(this, "Admin password must be at least 6 characters."); return;
             }
             if (!pass.equals(conf)) {
-                JOptionPane.showMessageDialog(this, "Passwords do not match."); return;
+                JOptionPane.showMessageDialog(this, "Admin passwords do not match."); return;
             }
-
             try (Connection c = DatabaseConnection.getConnection();
                  PreparedStatement ps = c.prepareStatement("UPDATE users SET password_hash=? WHERE username=?")) {
                 ps.setString(1, DatabaseConnection.hashPassword(pass));
@@ -147,10 +190,50 @@ public class SettingsDialog extends JDialog {
             } catch (Exception ex) { ex.printStackTrace(); }
         }
 
+        // Update Staff Username and Password
+        try (Connection c = DatabaseConnection.getConnection()) {
+            // Check if new username already exists (if changed)
+            if (!sUser.equals(currentStaffUsername)) {
+                try (PreparedStatement check = c.prepareStatement("SELECT id FROM users WHERE username=? AND role != 'staff'")) {
+                    check.setString(1, sUser);
+                    ResultSet rs = check.executeQuery();
+                    if (rs.next()) {
+                        JOptionPane.showMessageDialog(this, "Username '" + sUser + "' is already taken.");
+                        return;
+                    }
+                }
+            }
+
+            // Validate Staff Password
+            if (!sPass.isEmpty()) {
+                if (sPass.length() < 6) {
+                    JOptionPane.showMessageDialog(this, "Staff password must be at least 6 characters."); return;
+                }
+                if (!sPass.equals(sConf)) {
+                    JOptionPane.showMessageDialog(this, "Staff passwords do not match."); return;
+                }
+                // Update username and password
+                try (PreparedStatement ps = c.prepareStatement("UPDATE users SET username=?, password_hash=? WHERE role='staff'")) {
+                    ps.setString(1, sUser);
+                    ps.setString(2, DatabaseConnection.hashPassword(sPass));
+                    ps.executeUpdate();
+                }
+            } else {
+                // Just update username
+                try (PreparedStatement ps = c.prepareStatement("UPDATE users SET username=? WHERE role='staff'")) {
+                    ps.setString(1, sUser);
+                    ps.executeUpdate();
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating staff account.");
+            return;
+        }
+
         AppConfig.setLibraryName(libName);
         AppConfig.setFineRatePerDay(fine);
         
-        // Notify user about title change requiring restart (MainFrame handles it, but title is set on launch)
         JOptionPane.showMessageDialog(this, "Settings saved! Any library name changes will fully apply on the next restart.");
         dispose();
     }
